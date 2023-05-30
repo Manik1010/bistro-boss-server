@@ -25,13 +25,14 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-
+    // await client.connect();
 
     const menuCollection = client.db("bistroDB").collection("menu");
     const reviewsCollection = client.db("bistroDB").collection("reviews");
     const cartsCollection = client.db("bistroDB").collection("carts");
 
+
+    // 
     app.get('/reviews', async (req, res) => {
       const result = await reviewsCollection.find().toArray();
       res.send(result);
@@ -59,10 +60,19 @@ async function run() {
 
     app.post('/carts', async (req, res) => {
       const item = req.body;
-      console.log(item);
+      // console.log(item);
       const result = await cartsCollection.insertOne(item);
       res.send(result);
     })
+
+    app.delete('/carts/:id', async( req, res) =>{
+      const id = req.params.id;
+      const query = { _id: new Object(id)}
+      const result = await cartsCollection.deleteOne(query);
+      res.send(result)
+    })
+
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
