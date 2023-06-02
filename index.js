@@ -138,7 +138,7 @@ async function run() {
       const result = await reviewsCollection.find().toArray();
       res.send(result);
     })
-    app.get('/menu', async (req, res) => {
+    app.get('/', async (req, res) => {
       const result = await menuCollection.find().toArray();
       res.send(result);
     })
@@ -172,8 +172,18 @@ async function run() {
       const result = await cartsCollection.insertOne(item);
       res.send(result);
     })
+    // menu related apis
+    app.get('/menu', async (req, res) => {
+      const result = await menuCollection.find().toArray();
+      res.send(result);
+    })
+    app.post('/menu', verifyJWT, verifyAdmin, async(req, res) =>{
+      const newItem = req.body;
+      const result = await menuCollection.insertOne(newItem).toArray()
+      res.send(result);
+    })
 
-    app.post("/postMenu", async (req, res) => {
+    app.post('/postMenu', async (req, res) => {
             const menuInfo = req.body;
             // console.log("Menu info:", menuInfo);
             const result = await menuCollection.insertOne(menuInfo);
